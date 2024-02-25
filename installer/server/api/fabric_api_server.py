@@ -21,28 +21,26 @@ def server_error(e):
     return jsonify({"error": "An internal server error occurred."}), 500
 
 
-##################################################
-##################################################
-#
-# ⚠️ CAUTION: This is an HTTP-only server!
-#
-# If you don't know what you're doing, don't run
-#
-##################################################
-##################################################
+# Load your OpenAI API key from a file
+with open("/root/fabric_api/openai.key", "r") as key_file:
+    api_key = key_file.read().strip()
 
-## Setup
-
-## Did I mention this is HTTP only? Don't run this on the public internet.
+## Define our own client
+client_openai = openai.OpenAI(api_key = api_key)
 
 # Read API tokens from the apikeys.json file
-api_keys = resources.read_text("installer.server.api", "fabric_api_keys.json")
-valid_tokens = json.loads(api_keys)
+with open("/root/fabric/fabric_api_keys.json", "r") as tokens_file:
+    valid_tokens = json.load(tokens_file)
+
+
+# Read API tokens from the apikeys.json file
+#api_keys = resources.read_text("installer.server.api", "fabric_api_keys.json")
+#valid_tokens = json.loads(api_keys)
 
 
 # Read users from the users.json file
-users = resources.read_text("installer.server.api", "users.json")
-users = json.loads(users)
+#users = resources.read_text("installer.server.api", "users.json")
+#users = json.loads(users)
 
 
 # The function to check if the token is valid
@@ -156,10 +154,10 @@ def fetch_content_from_url(url):
 ## APIs
 # Make path mapping flexible and scalable
 pattern_path_mappings = {
-    "extwis": {"system_url": "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/extract_wisdom/system.md",
-               "user_url": "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/extract_wisdom/user.md"},
-    "summarize": {"system_url": "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/summarize/system.md",
-                  "user_url": "https://raw.githubusercontent.com/danielmiessler/fabric/main/patterns/summarize/user.md"}
+    "extwis": {"system_url": "https://raw.githubusercontent.com/gralperic/fabric/main/patterns/extract_wisdom/system.md",
+               "user_url": "https://raw.githubusercontent.com/gralperic/fabric/main/patterns/extract_wisdom/user.md"},
+    "summarize": {"system_url": "https://raw.githubusercontent.com/gralperic/fabric/main/patterns/summarize/system.md",
+                  "user_url": "https://raw.githubusercontent.com/gralperic/fabric/main/patterns/summarize/user.md"}
 } # Add more pattern with your desire path as a key in this dictionary
 
 # /<pattern>
@@ -197,7 +195,7 @@ def milling(pattern):
     user_message = {"role": "user", "content": user_file_content + "\n" + input_data}
     messages = [system_message, user_message]
     try:
-        response = openai.chat.completions.create(
+        response = client_openai.chat.completions.create(
             model="gpt-4-1106-preview",
             messages=messages,
             temperature=0.0,
@@ -211,43 +209,6 @@ def milling(pattern):
         app.logger.error(f"Error occurred: {str(e)}")
         return jsonify({"error": "An error occurred while processing the request."}), 500
 
-
-@app.route("/register", methods=["POST"])
-def register():
-    data = request.get_json()
-
-    username = data["username"]
-    password = data["password"]
-
-    if username in users:
-        return jsonify({"error": "Username already exists"}), 400
-
-    new_user = {
-        "username": username,
-        "password": password
-    }
-
-    users[username] = new_user
-
-    token = jwt.encode({"username": username}, os.getenv("JWT_SECRET"), algorithm="HS256")
-
-    return jsonify({"token": token.decode("utf-8")})
-
-
-@app.route("/login", methods=["POST"])
-def login():
-    data = request.get_json()
-
-    username = data["username"]
-    password = data["password"]
-
-    if username in users and users[username]["password"] == password:
-        # Generate a JWT token
-        token = jwt.encode({"username": username}, os.getenv("JWT_SECRET"), algorithm="HS256")
-
-        return jsonify({"token": token.decode("utf-8")})
-
-    return jsonify({"error": "Invalid username or password"}), 401
 
 
 def main():
