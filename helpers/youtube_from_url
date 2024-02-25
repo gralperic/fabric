@@ -1,0 +1,10 @@
+#!/bin/bash
+
+read -r url
+video_id=$(echo $url | grep -o 'v=[^&]*' | sed 's/v=//')
+if [ -z "$video_id" ]
+then
+	echo "Failed to get video ID from gvid"
+	exit 1
+fi
+youtube_from_id "$video_id" --format text
