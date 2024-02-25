@@ -111,7 +111,11 @@ pattern_path_mappings = {
     "extwis": {"system_url": "https://raw.githubusercontent.com/gralperic/fabric/main/patterns/extract_wisdom/system.md",
                "user_url": "https://raw.githubusercontent.com/gralperic/fabric/main/patterns/extract_wisdom/user.md"},
     "summarize": {"system_url": "https://raw.githubusercontent.com/gralperic/fabric/main/patterns/summarize/system.md",
-                  "user_url": "https://raw.githubusercontent.com/gralperic/fabric/main/patterns/summarize/user.md"}
+                  "user_url": "https://raw.githubusercontent.com/gralperic/fabric/main/patterns/summarize/user.md"},
+    "summarize_newsletter": {"system_url": "https://raw.githubusercontent.com/gralperic/fabric/main/patterns/summarize_newsletter/system.md",
+                  "user_url": "https://raw.githubusercontent.com/gralperic/fabric/main/patterns/summarize_newsletter/user.md"},
+    "analyze_incident": {"system_url": "https://raw.githubusercontent.com/gralperic/fabric/main/patterns/analyze_incident/system.md",
+                  "user_url": "https://raw.githubusercontent.com/gralperic/fabric/main/patterns/analyze_incident/user.md"}
 } # Add more pattern with your desire path as a key in this dictionary
 
 # /<pattern>
