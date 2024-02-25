@@ -32,45 +32,10 @@ client_openai = openai.OpenAI(api_key = api_key)
 with open("/root/fabric_api/fabric_api_keys.json", "r") as tokens_file:
     valid_tokens = json.load(tokens_file)
 
-
-# Read API tokens from the apikeys.json file
-#api_keys = resources.read_text("installer.server.api", "fabric_api_keys.json")
-#valid_tokens = json.loads(api_keys)
-
-
-# Read users from the users.json file
-#users = resources.read_text("installer.server.api", "users.json")
-#users = json.loads(users)
-
-
 # The function to check if the token is valid
 def auth_required(f):
-    """    Decorator function to check if the token is valid.
-
-    Args:
-        f: The function to be decorated
-
-    Returns:
-        The decorated function
-    """
-
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        """        Decorated function to handle authentication token and API endpoint.
-
-        Args:
-            *args: Variable length argument list.
-            **kwargs: Arbitrary keyword arguments.
-
-        Returns:
-            Result of the decorated function.
-
-        Raises:
-            KeyError: If 'Authorization' header is not found in the request.
-            TypeError: If 'Authorization' header value is not a string.
-            ValueError: If the authentication token is invalid or expired.
-        """
-
         # Get the authentication token from request header
         auth_token = request.headers.get("Authorization", "")
 
@@ -90,22 +55,11 @@ def auth_required(f):
 
     return decorated_function
 
-
 # Check for a valid token/user for the given route
 def check_auth_token(token, route):
-    """    Check if the provided token is valid for the given route and return the corresponding user.
-
-    Args:
-        token (str): The token to be checked for validity.
-        route (str): The route for which the token validity is to be checked.
-
-    Returns:
-        str: The user corresponding to the provided token and route if valid, otherwise returns "Unauthorized: You are not authorized for this API".
-    """
-
     # Check if token is valid for the given route and return corresponding user
     if route in valid_tokens and token in valid_tokens[route]:
-        return users[valid_tokens[route][token]]
+        return valid_tokens[route][token]
     else:
         return "Unauthorized: You are not authorized for this API"
 
