@@ -29,7 +29,7 @@ with open("/root/fabric_api/openai.key", "r") as key_file:
 client_openai = openai.OpenAI(api_key = api_key)
 
 # Read API tokens from the apikeys.json file
-with open("/root/fabric/fabric_api_keys.json", "r") as tokens_file:
+with open("/root/fabric_api/fabric_api_keys.json", "r") as tokens_file:
     valid_tokens = json.load(tokens_file)
 
 
