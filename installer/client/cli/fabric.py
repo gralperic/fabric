@@ -27,7 +27,7 @@ def main():
     parser.add_argument(
         "--stream",
         "-s",
-        help="Use this option if you want to see the results in realtime. NOTE: You will not be able to pipe the output into another command.",
+        help="Use this option if you want to see the results in realtime. NOTE: You will not be able patterns/analyze_prose_json/user.md to pipe the output into another command.",
         action="store_true",
     )
     parser.add_argument(

@@ -91,7 +91,7 @@ async function downloadAndUpdatePatterns(patternsPath) {
   try {
     const response = await axios({
       method: "get",
-      url: "https://github.com/danielmiessler/fabric/archive/refs/heads/main.zip",
+      url: "https://github.com/gralperic/fabric/archive/refs/heads/main.zip",
       responseType: "arraybuffer",
     });
 
